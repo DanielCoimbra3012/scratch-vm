@@ -67,6 +67,7 @@
     "jszip": "^3.1.5",
     "minilog": "^3.1.0",
     "nets": "^3.2.0",
+    "regenerator-runtime": "^0.14.1",
     "scratch-audio": "^2.0.0",
     "scratch-parser": "^6.0.0",
     "scratch-render": "^2.0.0",
