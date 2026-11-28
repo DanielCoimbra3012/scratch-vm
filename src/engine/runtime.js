@@ -47,6 +47,27 @@ const defaultBlockPackages = {
 const defaultExtensionColors = ['#0FBD8C', '#0DA57A', '#0B8E69'];
 
 /**
+ * Playdata: build the loop arrow icon (same shape as scratch-blocks' media/repeat.svg) as a data URI,
+ * using the extension's border color instead of the Control category's orange (#CF8B17).
+ * Embedding the icon also avoids depending on where scratch-gui serves block media.
+ * @param {string} borderColor - the extension's tertiary (border) color, e.g. '#078A86'.
+ * @returns {string} a data URI for the loop arrow icon.
+ */
+const loopIconURI = borderColor => {
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
+        `<path fill="${borderColor}" d="M23.3,11c-0.3,0.6-0.9,1-1.5,1h-1.6c-0.1,1.3-0.5,2.5-1.1,3.6c-0.9,1.7-2.3,` +
+        '3.2-4.1,4.1c-1.7,0.9-3.6,1.2-5.5,0.9c-1.8-0.3-3.5-1.1-4.9-2.3c-0.7-0.7-0.7-1.9,0-2.6c0.6-0.6,1.6-0.7,' +
+        '2.3-0.2H7c0.9,0.6,1.9,0.9,2.9,0.9s1.9-0.3,2.7-0.9c1.1-0.8,1.8-2.1,1.8-3.5h-1.5c-0.9,0-1.7-0.7-1.7-1.7' +
+        'c0-0.4,0.2-0.9,0.5-1.2l4.4-4.4c0.7-0.6,1.7-0.6,2.4,0L23,9.2C23.5,9.7,23.6,10.4,23.3,11z"/>' +
+        '<path fill="#FFFFFF" d="M21.8,11h-2.6c0,1.5-0.3,2.9-1,4.2c-0.8,1.6-2.1,2.8-3.7,3.6c-1.5,0.8-3.3,1.1-4.9,' +
+        '0.8c-1.6-0.2-3.2-1-4.4-2.1c-0.4-0.3-0.4-0.9-0.1-1.2c0.3-0.4,0.9-0.4,1.2-0.1l0,0c1,0.7,2.2,1.1,3.4,1.1' +
+        's2.3-0.3,3.3-1c0.9-0.6,1.6-1.5,2-2.6c0.3-0.9,0.4-1.8,0.2-2.8h-2.4c-0.4,0-0.7-0.3-0.7-0.7c0-0.2,0.1-0.3,' +
+        '0.2-0.4l4.4-4.4c0.3-0.3,0.7-0.3,0.9,0L22,9.8c0.3,0.3,0.4,0.6,0.3,0.9S22,11,21.8,11z"/>' +
+        '</svg>';
+    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+};
+
+/**
  * Information used for converting Scratch argument types into scratch-blocks data.
  * @type {object.<ArgumentType, {shadowType: string, fieldType: string}>}
  */
@@ -1300,7 +1321,8 @@ class Runtime extends EventEmitter {
             blockJSON[`args${outLineNum}`] = [
                 {
                     type: 'field_image',
-                    src: './static/blocks-media/repeat.svg', // TODO: use a constant or make this configurable?
+                    // Playdata: arrow drawn with the extension's border color (see loopIconURI)
+                    src: loopIconURI(categoryInfo.color3),
                     width: 24,
                     height: 24,
                     alt: '*', // TODO remove this since we don't use collapsed blocks in scratch
